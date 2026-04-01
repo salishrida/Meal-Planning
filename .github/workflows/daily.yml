@@ -1,0 +1,40 @@
+name: Meal Planning – Daily Run
+
+on:
+  schedule:
+    - cron: "30 2 * * *"   # 8:00 AM IST
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Meal‑Planning script
+        run: python src/main.py
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          USDA_API_KEY: ${{ secrets.USDA_API_KEY }}
+
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+
+          KEYWORDS: "high protein vegetarian indian,paneer high protein,tofu recipe indian,soya chunks recipe"
+          MIN_PROTEIN_G: "15"
+          TOP_N: "5"
